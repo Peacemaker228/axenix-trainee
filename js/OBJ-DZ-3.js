@@ -13,6 +13,15 @@ const dnaToRna = (dna) => {
   };
 
   return dna.replace(/[ACGT]/g, (val) => chars[val]);
+
+  // let result = "";
+
+  // for (const el of dna) {
+  //   if (!chars[el]) return null;
+  //   result += chars[el];
+  // }
+
+  // return result;
 };
 
 export default dnaToRna;
