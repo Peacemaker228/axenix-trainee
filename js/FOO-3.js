@@ -9,6 +9,8 @@ let sides = {
 
 console.log((2.5).toFixed(0));
 
+const percent = 100;
+
 const displayHistogram = (rollCount, foo) => {
   const sideCount = [...Array(rollCount).keys()]
     .map(() => foo())
@@ -18,8 +20,8 @@ const displayHistogram = (rollCount, foo) => {
     }, sides);
 
   const test = Object.keys(sideCount).reduce((acc, curr) => {
-    console.log((acc[curr] * 100) / rollCount, 'def');
-    acc[curr] = _.round((acc[curr] * 100) / rollCount);
+    console.log((acc[curr] * percent) / rollCount, 'def');
+    acc[curr] = _.round((acc[curr] * percent) / rollCount);
     return acc;
   }, sideCount);
 
