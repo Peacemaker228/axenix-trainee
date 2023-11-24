@@ -1,36 +1,35 @@
+// let sig = [];
+
+// str.split("").forEach((el, i) => {
+//   if (el === "|") {
+//     return sig.push("");
+//   }
+
+//   if (sig[i - 1] === "") {
+//     return sig.push("1");
+//   }
+//   sig.push("0");
+// return sig.join("");
+// });
 const nrzi = (str) => {
   if (!str.length || str === "|") return "";
-  let sig = [];
-  //   str.split("").forEach((el, i) => {
-  //     if (el === "|") {
-  //       //   return (el = "");
-  //       return sig.push("");
-  //     }
 
-  //     if (sig[i - 1] === "") {
-  //       //   el = "1";
-  //       sig.push("1");
-  //     } else {
-  //       //   el = "0";
-  //       sig.push("0");
-  //     }
-  //   });
-  //   const test = str.split("").reduce((acc, curr, i) => {
-  //     console.log(acc[i - 1]);
-  //     if (curr === "|") {
-  //       acc[i] = "";
-  //     }
+  const result = str.split("").reduce((acc, curr, i) => {
+    if (curr === "|") {
+      acc.push("");
+      return acc;
+    }
 
-  //     if (acc[i - 1] === "") {
-  //       acc[i] = "1";
-  //     } else {
-  //       acc[i] = "0";
-  //     }
+    if (!acc[i - 1]) {
+      acc.push("1");
+      return acc;
+    }
 
-  //     return acc;
-  //   }, []);
+    acc.push("0");
+    return acc;
+  }, []);
 
-  //   return test.join("");
+  return result.join("");
 };
 
 const signal1 = "_|¯|____|¯|__|¯¯¯";
