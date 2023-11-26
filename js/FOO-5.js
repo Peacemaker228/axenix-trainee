@@ -12,16 +12,16 @@ const calculateProbabilities = (arr) => {
   }, {});
 
   Object.entries(rollObj).forEach(([key, value]) => {
-    const test2 = value.reduce((acc, curr) => {
+    const rollCount = value.reduce((acc, curr) => {
       acc[curr] = Number(acc[curr] || []) + 1;
 
       return acc;
     }, {});
 
     newObj[key] = Object.fromEntries(
-      Object.entries(test2).map(([key, valueArr]) => {
+      Object.entries(rollCount).map(([key, valueArr]) => {
         return [key, valueArr / value.length];
-      })
+      }),
     );
   });
 
