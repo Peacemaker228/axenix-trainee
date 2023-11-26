@@ -19,18 +19,35 @@ const play = (rollCount, foo) => {
       return acc;
     }, sides);
 
-  const result = Object.entries(sideCount).map(([key, value]) => {
+  const result = Object.entries(sideCount).reduce((acc, [key, value]) => {
     //   let newVal = ...
-    value =
-      lodash
-        .range(value)
-        .map(() => '#')
-        .join('') + (value ? ` ${value}` : '');
+    value = value
+      ? lodash
+          .range(value)
+          .map(() => '#')
+          .join('') + ` ${value}`
+      : '';
 
-    return `${key}|${value}`;
-  });
+    return (acc += `${key}|${value}\n`);
+  }, '');
 
   return result;
 };
 
 export default play;
+//  немного по-другому через map()
+
+//   const result = Object.entries(sideCount)
+//     .map(([key, value]) => {
+//       //   let newVal = ...
+//       value =
+//         lodash
+//           .range(value)
+//           .map(() => '#')
+//           .join('') + (value ? ` ${value}` : '');
+
+//       return `${key}|${value}`;
+//     })
+//     .join('\n');
+
+//   return result;
