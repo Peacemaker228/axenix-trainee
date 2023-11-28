@@ -1,7 +1,7 @@
-const testArr = ["James", "Nix", "Abdul", "Alan"];
+const testArr = ['James', 'Nix', 'Abdul', 'Alan'];
 
 Array.prototype.protoMap = function (callback, thisContext = this) {
-  if (!this.length) throw new TypeError("undefined is not a function");
+  if (!this.length) throw new TypeError('undefined is not a function');
 
   const resArr = [];
 
@@ -16,23 +16,22 @@ Array.prototype.protoMap = function (callback, thisContext = this) {
   return resArr;
 };
 
-const res = testArr.protoMap((el, index, initArr) => {
-  console.log(el, index, initArr);
-  return el + 1;
-});
+// const res = testArr.protoMap((el, index, initArr) => {
+//   console.log(el, index, initArr);
+//   return el + 1;
+// });
 
-// console.log([].map());
-console.log(res);
+// console.log(res);
 
 Array.prototype.protoFilter = function (callback, thisContext = this) {
   if (!this.length || !callback)
-    throw new TypeError("undefined is not a function");
+    throw new TypeError('undefined is not a function');
 
-  if (typeof callback !== "function")
+  if (typeof callback !== 'function')
     throw new TypeError(
       `${typeof callback} ${
-        typeof callback === "string" ? `"${callback}"` : callback
-      } is not a function`
+        typeof callback === 'string' ? `"${callback}"` : callback
+      } is not a function`,
     );
 
   const resArr = [];
@@ -58,26 +57,70 @@ Array.prototype.protoFilter = function (callback, thisContext = this) {
 // const res = testArr.filter(aasd);
 // console.log(res);
 
-Array.prototype.protoReduce = function (callback, initialValue) {
-  const initO = Object(this);
+const createMethod = (isRight = false) => {
+  return function (callback, initialValue) {
+    if (typeof callback !== 'function') {
+      throw new TypeError(`${callback} is not a function`);
+    }
 
-  const lengthO = initO.length;
+    const initO = Object(this);
+    const lengthO = initO.length;
 
-  if (!lengthO && initialValue)
-    throw new TypeError("Reduce of empty array with no initial value");
+    let index = isRight ? lengthO - 1 : 0;
+    let loopIndex = isRight ? -1 : 1;
 
-  let index = 0;
+    let accum = undefined;
 
-  let accum = initialValue || undefined;
+    if (initialValue !== undefined && initialValue !== null) {
+      accum = initialValue;
+    } else {
+      let keyPresent = false;
 
-  const thisCallback = callback.bind(thisContext);
+      while (isRight ? index > 0 : index < lengthO) {
+        keyPresent = index in initO;
 
-  //   let initType = initialValue || this[i];
+        if (keyPresent) {
+          accum = initO[index];
+          index += loopIndex;
 
-  for (let i = 0; i < arrLength; i += 1) {
-    thisCallback(accum, this[i], i, this);
-    resArr[i] = thisCallback(resArr, this[i], i, this);
-  }
+          break;
+        }
+      }
 
-  return resArr;
+      if (!keyPresent) {
+        throw new Error('Reduce of empty array with no initial value');
+      }
+    }
+
+    while (isRight ? index >= 0 : index < lengthO) {
+      if (index in initO) {
+        let keyValue = initO[index];
+
+        accum = callback(accum, keyValue, index, initO);
+      }
+
+      index += loopIndex;
+    }
+
+    return accum;
+  };
 };
+
+Array.prototype.protoReduce = createMethod();
+Array.prototype.protoReduceRight = createMethod(true);
+
+const reduceArr = [];
+
+console.log(
+  reduceArr.protoReduce((acc, curr) => {
+    acc[curr] = (acc[curr] || 0) + 1;
+    return acc;
+  }, {}),
+);
+
+console.log(
+  reduceArr.protoReduceRight((acc, curr) => {
+    acc[curr] = (acc[curr] || 0) + 1;``
+    return acc;
+  }, {}),
+);
