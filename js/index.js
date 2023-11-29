@@ -1,7 +1,27 @@
-const testArr = ['James', 'Nix', 'Abdul', 'Alan'];
+const testArr = [
+  { name: "Alan", sur: "Man" },
+  { name: "Nix", sur: "Woman" },
+  { name: "Soma", sur: "Man" },
+  { name: "Nix", sur: "asd" },
+  { name: "Nix", sur: "Man" },
+];
+
+Array.prototype.protoFind = function (callback, thisContext = this) {
+  const arrLength = this.length;
+
+  for (let i = 0; i < arrLength; i += 1) {
+    if (callback.call(thisContext, this[i], i, this)) {
+      return this[i];
+    }
+  }
+
+  return undefined;
+};
+
+console.log(testArr.protoFind((el) => el === "qwe"));
 
 Array.prototype.protoMap = function (callback, thisContext = this) {
-  if (!this.length) throw new TypeError('undefined is not a function');
+  if (!this.length) throw new TypeError("undefined is not a function");
 
   const resArr = [];
 
@@ -25,13 +45,13 @@ Array.prototype.protoMap = function (callback, thisContext = this) {
 
 Array.prototype.protoFilter = function (callback, thisContext = this) {
   if (!this.length || !callback)
-    throw new TypeError('undefined is not a function');
+    throw new TypeError("undefined is not a function");
 
-  if (typeof callback !== 'function')
+  if (typeof callback !== "function")
     throw new TypeError(
       `${typeof callback} ${
-        typeof callback === 'string' ? `"${callback}"` : callback
-      } is not a function`,
+        typeof callback === "string" ? `"${callback}"` : callback
+      } is not a function`
     );
 
   const resArr = [];
@@ -59,7 +79,7 @@ Array.prototype.protoFilter = function (callback, thisContext = this) {
 
 const createMethod = (isRight = false) => {
   return function (callback, initialValue) {
-    if (typeof callback !== 'function') {
+    if (typeof callback !== "function") {
       throw new TypeError(`${callback} is not a function`);
     }
 
@@ -88,7 +108,7 @@ const createMethod = (isRight = false) => {
       }
 
       if (!keyPresent) {
-        throw new Error('Reduce of empty array with no initial value');
+        throw new Error("Reduce of empty array with no initial value");
       }
     }
 
@@ -109,18 +129,28 @@ const createMethod = (isRight = false) => {
 Array.prototype.protoReduce = createMethod();
 Array.prototype.protoReduceRight = createMethod(true);
 
-const reduceArr = [];
+const reduceArr = [1, 2, 3, "str"];
 
-console.log(
-  reduceArr.protoReduce((acc, curr) => {
-    acc[curr] = (acc[curr] || 0) + 1;
-    return acc;
-  }, {}),
-);
+const reduceCallback = (acc, curr) => {
+  return (acc += curr);
+};
 
-console.log(
-  reduceArr.protoReduceRight((acc, curr) => {
-    acc[curr] = (acc[curr] || 0) + 1;``
-    return acc;
-  }, {}),
-);
+// console.log(reduceArr.protoReduce(reduceCallback, ""));
+
+// console.log(reduceArr.protoReduceRight(reduceCallback, ""));
+
+const firstObj = {
+  a: 1,
+  b: 2,
+  c: 5,
+  d: 2,
+};
+
+const secondObj = { a: 1, b: 2, c: 1 };
+
+const invert = (obj) => {
+  return Object.fromEntries(Object.entries(obj).map((el) => el.reverse()));
+};
+
+console.log(invert(firstObj));
+console.log(invert(secondObj));
