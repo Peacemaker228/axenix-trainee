@@ -1,9 +1,9 @@
 const testArr = [
-  { name: "Alan", sur: "Man" },
-  { name: "Nix", sur: "Woman" },
-  { name: "Soma", sur: "Man" },
-  { name: "Nix", sur: "asd" },
-  { name: "Nix", sur: "Man" },
+  { name: 'Alan', sur: 'Man' },
+  { name: 'Nix', sur: 'Woman' },
+  { name: 'Soma', sur: 'Man' },
+  { name: 'Nix', sur: 'asd' },
+  { name: 'Nix', sur: 'Man' },
 ];
 
 const createFindMethod = (isIndex = false) => {
@@ -11,7 +11,7 @@ const createFindMethod = (isIndex = false) => {
     const initObj = Object(this);
     const lengthObj = initObj.length;
 
-    if (typeof callback !== "function")
+    if (typeof callback !== 'function')
       throw new TypeError(`${callback} is not a function`);
 
     for (let i = 0; i < lengthObj; i += 1) {
@@ -32,7 +32,7 @@ const createFindLastMethod = (isIndex = false) => {
     const initObj = Object(this);
     const lengthObj = initObj.length;
 
-    if (typeof callback !== "function")
+    if (typeof callback !== 'function')
       throw new TypeError(`${callback} is not a function`);
 
     for (let i = lengthObj; i >= 0; i -= 1) {
@@ -67,7 +67,7 @@ Array.prototype.protoEvery = function (callback, thisContext = undefined) {
   const initObj = Object(this);
   const lengthObj = initObj.length;
 
-  if (typeof callback !== "function")
+  if (typeof callback !== 'function')
     throw new TypeError(`${callback} is not a function`);
 
   for (let i = 0; i < lengthObj; i += 1) {
@@ -136,7 +136,7 @@ Array.prototype.protoConcat = function (...value) {
 // console.log(['a', 'b', 'c'].protoConcat(1, [2, 3]));
 
 Array.prototype.protoMap = function (callback, thisContext = this) {
-  if (!this.length) throw new TypeError("undefined is not a function");
+  if (!this.length) throw new TypeError('undefined is not a function');
 
   const resArr = [];
 
@@ -160,13 +160,13 @@ Array.prototype.protoMap = function (callback, thisContext = this) {
 
 Array.prototype.protoFilter = function (callback, thisContext = this) {
   if (!this.length || !callback)
-    throw new TypeError("undefined is not a function");
+    throw new TypeError('undefined is not a function');
 
-  if (typeof callback !== "function")
+  if (typeof callback !== 'function')
     throw new TypeError(
       `${typeof callback} ${
-        typeof callback === "string" ? `"${callback}"` : callback
-      } is not a function`
+        typeof callback === 'string' ? `"${callback}"` : callback
+      } is not a function`,
     );
 
   const resArr = [];
@@ -194,7 +194,7 @@ Array.prototype.protoFilter = function (callback, thisContext = this) {
 
 const createMethod = (isRight = false) => {
   return function (callback, initialValue) {
-    if (typeof callback !== "function") {
+    if (typeof callback !== 'function') {
       throw new TypeError(`${callback} is not a function`);
     }
 
@@ -223,7 +223,7 @@ const createMethod = (isRight = false) => {
       }
 
       if (!keyPresent) {
-        throw new Error("Reduce of empty array with no initial value");
+        throw new Error('Reduce of empty array with no initial value');
       }
     }
 
@@ -244,7 +244,7 @@ const createMethod = (isRight = false) => {
 Array.prototype.protoReduce = createMethod();
 Array.prototype.protoReduceRight = createMethod(true);
 
-const reduceArr = [1, 2, 3, "str"];
+const reduceArr = [1, 2, 3, 'str'];
 
 const reduceCallback = (acc, curr) => {
   return (acc += curr);
@@ -274,18 +274,18 @@ const reduceCallback = (acc, curr) => {
 
 const firstPromise = () => {
   return new Promise((resolve) =>
-    setTimeout(() => resolve(console.log(300)), 3000)
+    setTimeout(() => resolve(console.log(300)), 3000),
   );
 };
 
 const secondPromise = () => {
   return new Promise((resolve) =>
-    setTimeout(() => resolve(console.log(200)), 2000)
+    setTimeout(() => resolve(console.log(200)), 2000),
   );
 };
 const thirdPromise = () => {
   return new Promise((resolve) =>
-    setTimeout(() => resolve(console.log(100)), 1000)
+    setTimeout(() => resolve(console.log(100)), 1000),
   );
 };
 
@@ -300,26 +300,34 @@ const thirdPromise = () => {
 //   console.log(res, "res")
 // );
 
-const foo = (cb) => setTimeout(() => cb("A"), Math.random() * 100);
-const bar = (cb) => setTimeout(() => cb("B"), Math.random() * 100);
-const baz = (cb) => setTimeout(() => cb("C"), Math.random() * 100);
+const foo = (cb) => setTimeout(() => cb('A'), Math.random() * 100);
+const bar = (cb) => setTimeout(() => cb('B'), Math.random() * 100);
+const baz = (cb) => setTimeout(() => cb('C'), Math.random() * 100);
 
-const promiseInSeries = async (...foo) => {
-  let resArr = "";
+// const promiseInSeries = async (...foo) => {
+//   let resArr = '';
 
-  for (let i = 0; i < foo.length; i += 1) {
-    let promise = new Promise((res) => foo[i](res));
-    const res = await promise;
-    resArr += res;
-  }
+//   for (let i = 0; i < foo.length; i += 1) {
+//     const promise = new Promise((res) => foo[i](res));
+//     const res = await promise;
+//     resArr += res;
+//   }
 
-  return resArr;
+//   return resArr;
+// };
+
+// promiseInSeries(foo, bar, baz).then((res) => console.log(res));
+
+// res.then((res) => res.join('')).then(console.log);
+
+const asyncCreator = (fooArr) => {
+  const promiseCreator = (callback) => {
+    return new Promise((res) => callback(res));
+  };
+
+  const promiseArr = fooArr.map((el) => promiseCreator(el));
+
+  return Promise.all(promiseArr).then((resolve) => resolve.join(''));
 };
 
-promiseInSeries(foo, bar, baz).then((res) => console.log(res));
-// promiseInSeries(bar);
-// promiseInSeries(baz);
-
-// foo();
-// bar();
-// baz();
+asyncCreator([foo, bar, baz]).then(console.log);
