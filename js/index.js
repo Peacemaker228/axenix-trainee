@@ -5,7 +5,7 @@ const testArr = [
   { name: "Nix", sur: "asd" },
   { name: "Nix", sur: "Man" },
 ];
-
+// find
 const createFindMethod = (isIndex = false) => {
   return function (callback, thisContext = this) {
     const initObj = Object(this);
@@ -26,6 +26,8 @@ const createFindMethod = (isIndex = false) => {
 
 Array.prototype.protoFind = createFindMethod();
 Array.prototype.protoFindIndex = createFindMethod(true);
+
+//  findLast
 
 const createFindLastMethod = (isIndex = false) => {
   return function (callback, thisContext = this) {
@@ -48,20 +50,7 @@ const createFindLastMethod = (isIndex = false) => {
 Array.prototype.protoFindLast = createFindLastMethod();
 Array.prototype.protoFindLastIndex = createFindLastMethod(true);
 
-// console.log([1, 2, "3", 3, 2].protoFindLastIndex());
-
-// console.log(
-//   ['awdawd', 'asd'].find((el, i) => {
-//     return el === 'asd';
-//   }),
-// );
-
-// console.log(testArr.protoFind((el) => el === 'qwe'));
-// console.log(
-//   testArr.protoFind((el, i) => {
-//     return i;
-//   }),
-// );
+// every
 
 Array.prototype.protoEvery = function (callback, thisContext = undefined) {
   const initObj = Object(this);
@@ -71,17 +60,17 @@ Array.prototype.protoEvery = function (callback, thisContext = undefined) {
     throw new TypeError(`${callback} is not a function`);
 
   for (let i = 0; i < lengthObj; i += 1) {
-    if (i in initObj) {
-      if (!callback.call(thisContext, initObj[i], i, initObj)) {
-        return false;
-      }
+    // if (!(i in initObj)) continue;
+
+    if (i in initObj && !callback.call(thisContext, initObj[i], i, initObj)) {
+      return false;
     }
   }
 
   return true;
 };
 
-// console.log([10, 12, 25].protoEvery((el) => el > 10));
+// fill
 
 Array.prototype.protoFill = function (value, start = 0, end = this.length) {
   const initObj = Object(this);
@@ -96,17 +85,7 @@ Array.prototype.protoFill = function (value, start = 0, end = this.length) {
   return initObj;
 };
 
-const array1 = [1, 2, 3, 4];
-// console.log(array1.fill(0, 2, 4));
-// array1.protoFill(0, 2, 4);
-// console.log(array1);
-
-// console.log([1, 2, 3].fill(4, 3, 5), "test");
-// console.log([].fill.call({ length: 3 }, 4));
-
-// var arr = Array(3).fill({});
-// arr[0].hi = "hi";
-// console.log(arr);
+// some
 
 Array.prototype.protoSome = function (callback, thisContext = undefined) {
   const initObj = Object(this);
@@ -123,11 +102,12 @@ Array.prototype.protoSome = function (callback, thisContext = undefined) {
   return false;
 };
 
+// concat
+
 Array.prototype.protoConcat = function (...value) {
   const initObj = Object(this);
 
   const argLength = value.length;
-
   let resArr = [...initObj];
 
   for (let i = 0; i < argLength; i += 1) {
@@ -141,42 +121,27 @@ Array.prototype.protoConcat = function (...value) {
   return resArr;
 };
 
-// console.log(
-//   [
-//     { name: "Alan", sur: "Man" },
-//     { name: "123", sur: "qwe" },
-//   ].protoConcat([{ name: "zxc", sur: "cbb" }])
-// );
-
-// console.log(['a', 'b', 'c'].protoConcat(1, [2, 3]));
+// map
 
 Array.prototype.protoMap = function (callback, thisContext = this) {
-  if (!this.length) throw new TypeError("undefined is not a function");
+  const initObj = Object(this);
+  const lengthObj = initObj.length;
+
+  if (!lengthObj) throw new TypeError("undefined is not a function");
 
   const resArr = [];
-
-  const arrLength = this.length;
-
   const thisCallback = callback.bind(thisContext);
 
-  for (let i = 0; i < arrLength; i += 1) {
-    resArr[i] = thisCallback(this[i], i, this);
+  for (let i = 0; i < lengthObj; i += 1) {
+    resArr[i] = thisCallback(initObj[i], i, initObj);
   }
 
   return resArr;
 };
 
-// const res = testArr.protoMap((el, index, initArr) => {
-//   console.log(el, index, initArr);
-//   return el + 1;
-// });
-
-// console.log(res);
+//  filter
 
 Array.prototype.protoFilter = function (callback, thisContext = this) {
-  if (!this.length || !callback)
-    throw new TypeError("undefined is not a function");
-
   if (typeof callback !== "function")
     throw new TypeError(
       `${typeof callback} ${
@@ -184,29 +149,25 @@ Array.prototype.protoFilter = function (callback, thisContext = this) {
       } is not a function`
     );
 
+  const initObj = Object(this);
+  const lengthObj = initObj.length;
+
+  if (!lengthObj || !callback)
+    throw new TypeError("undefined is not a function");
+
   const resArr = [];
-
-  const arrLength = this.length;
-
   const thisCallback = callback.bind(thisContext);
 
-  for (let i = 0; i < arrLength; i += 1) {
-    if (thisCallback(this[i], i, this)) {
-      resArr.push(this[i]);
+  for (let i = 0; i < lengthObj; i += 1) {
+    if (thisCallback(initObj[i], i, initObj)) {
+      resArr.push(initObj[i]);
     }
   }
 
   return resArr;
 };
 
-// const res = testArr.protoFilter((el, i, initArr) => {
-//   console.log(el, i, initArr);
-//   return el === "Alan";
-// });
-
-// const res = testArr.filter(aasd);
-// console.log(res);
-
+// reduce
 const createMethod = (isRight = false) => {
   return function (callback, initialValue) {
     if (typeof callback !== "function") {
@@ -258,91 +219,3 @@ const createMethod = (isRight = false) => {
 
 Array.prototype.protoReduce = createMethod();
 Array.prototype.protoReduceRight = createMethod(true);
-
-const reduceArr = [1, 2, 3, "str"];
-
-const reduceCallback = (acc, curr) => {
-  return (acc += curr);
-};
-
-// console.log(reduceArr.protoReduce(reduceCallback, ''));
-
-// console.log(reduceArr.protoReduceRight(reduceCallback, ''));
-
-//
-
-// const firstObj = {
-//   a: 1,
-//   b: 2,
-//   c: 5,
-//   d: 2,
-// };
-
-// const secondObj = { a: 1, b: 2, c: 1 };
-
-// const invert = (obj) => {
-//   return Object.fromEntries(Object.entries(obj).map((el) => el.reverse()));
-// };
-
-// console.log(invert(firstObj));
-// console.log(invert(secondObj));
-
-const firstPromise = () => {
-  return new Promise((resolve) =>
-    setTimeout(() => resolve(console.log(300)), 3000)
-  );
-};
-
-const secondPromise = () => {
-  return new Promise((resolve) =>
-    setTimeout(() => resolve(console.log(200)), 2000)
-  );
-};
-const thirdPromise = () => {
-  return new Promise((resolve) =>
-    setTimeout(() => resolve(console.log(100)), 1000)
-  );
-};
-
-// async function promisesInSeries(asyncFns) {
-//   for (let prom of asyncFns) {
-//     const sam = await prom();
-//     console.log(sam);
-//   }
-// }
-
-// promisesInSeries([firstPromise, secondPromise, thirdPromise]).then((res) =>
-//   console.log(res, "res")
-// );
-
-const foo = (cb) => setTimeout(() => cb("A"), Math.random() * 100);
-const bar = (cb) => setTimeout(() => cb("B"), Math.random() * 100);
-const baz = (cb) => setTimeout(() => cb("C"), Math.random() * 100);
-
-// const promiseInSeries = async (...foo) => {
-//   let resArr = '';
-
-//   for (let i = 0; i < foo.length; i += 1) {
-//     const promise = new Promise((res) => foo[i](res));
-//     const res = await promise;
-//     resArr += res;
-//   }
-
-//   return resArr;
-// };
-
-// promiseInSeries(foo, bar, baz).then((res) => console.log(res));
-
-// res.then((res) => res.join('')).then(console.log);
-
-// const asyncCreator = (fooArr) => {
-//   const promiseCreator = (callback) => {
-//     return new Promise((res) => callback(res));
-//   };
-
-//   const promiseArr = fooArr.map((el) => promiseCreator(el));
-
-//   return Promise.all(promiseArr).then((resolve) => resolve.join(''));
-// };
-
-// asyncCreator([foo, bar, baz]).then(console.log);
